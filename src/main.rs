@@ -42,7 +42,7 @@ async fn main() {
     .route("/", axum::routing::get(home))
     .route("/total", axum::routing::get(get_total))
     .route("/donate", axum::routing::post(donate))
-    .route("/donates", axum::routing::get(get_donates))
+    .route("/donations", axum::routing::get(get_donates))
     .with_state(shared);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
