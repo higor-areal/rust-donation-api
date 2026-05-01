@@ -1,3 +1,5 @@
+use core::str;
+
 use serde::{Deserialize, Serialize};
 
 
@@ -5,6 +7,11 @@ use serde::{Deserialize, Serialize};
 struct Donation{
     donor: String,
     amount: f64,
+}
+#[derive(Serialize)]
+struct TotalResponse{
+    quantity: u32,
+    total: f64,
 }
 
 impl Donation{
@@ -56,9 +63,13 @@ async fn home() -> String{
     "Sejá bem vindo a API do higor".to_string()
 }
 
-async fn get_total(axum::extract::State(state): axum::extract::State<std::sync::Arc<std::sync::Mutex<AppState>>>) -> String{
+async fn get_total(axum::extract::State(state): axum::extract::State<std::sync::Arc<std::sync::Mutex<AppState>>>) -> axum::Json<TotalResponse>{
     let data = state.lock().unwrap();
-    format!("Total: {}", data.total)
+    let res = TotalResponse{
+        quantity: data.donations.len() as u32,
+        total: data.total
+    };
+    axum::Json(res)
 }
 
 async fn donate(
